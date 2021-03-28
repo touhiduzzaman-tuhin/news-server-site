@@ -50,6 +50,23 @@ client.connect(err => {
       })
   })
 
+  app.get('/editNews/:id', (req, res) => {
+      newsCollection.find({_id : ObjectId(req.params.id)})
+      .toArray((err, documents) => {
+          res.send(documents)
+      })
+  })
+
+  app.patch('/updateNews/:id', (req, res) => {
+      newsCollection.updateOne({_id : ObjectId(req.params.id)},
+      {
+          $set : {siteName : req.body.siteName, authorName : req.body.authorName, title : req.body.title, image : req.body.image, summary : req.body.summary}
+      })
+      .then(result => {
+          res.send(result.matchedCount > 0)
+      })
+  })
+
   app.delete('/deleteNews/:id', (req, res) => {
       newsCollection.deleteOne({_id : ObjectId(req.params.id)})
       .then(result => {
